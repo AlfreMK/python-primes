@@ -24,11 +24,11 @@ def time_comparison(func_list, input):
 
 
 def main():
-    # isprime(n) time comparison
-    time_comparison([prime_functions.isprime, sympy.isprime, primality_test.isprime], 2147483647)
+    # is_prime(n) time comparison
+    time_comparison([prime_functions.is_prime, sympy.isprime, primality_test.is_prime], 2147483647)
 
-    # for bigger numbers we can't use prime_functions.isprime
-    time_comparison([sympy.isprime, primality_test.isprime], 2305843009213693951)
+    # for bigger numbers we can't use prime_functions.is_prime
+    time_comparison([sympy.isprime, primality_test.is_prime], 2305843009213693951)
 
 
 

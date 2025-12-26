@@ -1,214 +1,220 @@
-from other_functions import factorsproduct, notfactors_forprime
+"""
+Prime functions for Python. Some of them are similar to functions from SymPy library.
+These functions are not very efficient for big numbers. For big numbers, it is
+recommended to use the functions from SymPy library or use the primality_test function
+from primality_test.py file.
+"""
+
+from other_functions import product_of_elements, is_not_factor_of_primes
 
 
-# Some functions are implemented below to obtain or verify prime numbers.
-# Some of them are similar to functions from SymPy library.
-
-# Note: The functions are not very efficient for big numbers.
-#       For example, the function allprevprimes(n) is not efficient for n > 10**6.
-#       For big numbers, it is recommended to use the functions from SymPy library or
-#       use the primality_test function from primality_test.py file.
-
-
-def inefficient_isprime(n: int) -> bool:
-    # Inefficient (and simpliest) way to verify if a number is prime or not.
+def inefficient_is_prime(number: int) -> bool:
     """
+    Inefficient (and simplest) way to verify if a number is prime or not.
     Args :
-        n: int - n >= 1
+        number: Natural number to check.
     Returns :
-        bool - True if n is prime, False otherwise.
+        True if `number` is prime, False otherwise.
     """
-    for k in range(2, n):
-        if n % k == 0:
+    for k in range(2, number):
+        if number % k == 0:
             return False
     return True
 
 
-
-def isprime(n: int) -> bool:
-    # More "efficient" way to verify if a number is prime or not. Not very efficient for big numbers.
+def is_prime(number: int) -> bool:
     """
-    Args :
-        n: int - n >= 1
-    Returns :
-        bool - True if n is prime, False otherwise.
+    More "efficient" way to verify if a number is prime or not. Not very efficient for big numbers.
+    Args:
+        number: Natural number to check.
+    Returns:
+        True if `number` is prime, False otherwise.
     """
-    if (n % 2 == 0 and n > 2)\
-            or (n % 3 == 0 and n > 3)\
-            or (n % 5 == 0 and n > 5)\
-            or n<2:
+    if (
+        (number % 2 == 0 and number > 2)
+        or (number % 3 == 0 and number > 3)
+        or (number % 5 == 0 and number > 5)
+        or number < 2
+    ):
         return False
     k = 7
-    while n**(1/2) >= k:
-        if n % k == 0 and n**(1/2) >= k:
+    while number ** (1 / 2) >= k:
+        if number % k == 0 and number ** (1 / 2) >= k:
             return False
         k += 2
-        if n % k == 0 and n**(1/2) >= k:
+        if number % k == 0 and number ** (1 / 2) >= k:
             return False
         k += 2
-        if n % k == 0 and n**(1/2) >= k:
+        if number % k == 0 and number ** (1 / 2) >= k:
             return False
         k += 2
-        if n % k == 0 and n**(1/2) >= k:
+        if number % k == 0 and number ** (1 / 2) >= k:
             return False
         k += 4
     return True
 
 
-
-def allprevprimes(n: int) -> list:
+def all_previous_primes(number: int) -> list[int]:
     """
-    Args :
-        n: int - n >= 2
-    Returns :
-        list - A list of all primes <= n.
+    Returns a list of all primes <= `number`.
+    Args:
+        number: Natural number to get the previous primes.
+    Returns:
+        List of all primes <= `number`.
     """
+    if number < 2:
+        return []
     prime_numbers = [2]
     i = 3
-    while n >= i:
-        if notfactors_forprime(prime_numbers, i):
+    while number >= i:
+        if is_not_factor_of_primes(primes=prime_numbers, number=i):
             prime_numbers.append(i)
         i += 2
     return prime_numbers
 
 
-
-def arecoprime(a: int, b: int) -> bool:
-    # It verifies if two numbers doesn't have factors in common.
-    # Checkout the definition of CoPrimes for more info.
+def are_coprime(number1: int, number2: int) -> bool:
     """
-    Args :
-        a: int - a >= 1
-        b: int - b >= 1
-    Returns :
-        bool - True if a and b are coprime, False otherwise.
+    It verifies if two numbers doesn't have factors in common.
+    Args:
+        number1: Natural number to check.
+        number2: Natural number to check.
+    Returns:
+        True if `number1` and `number2` are coprime, False otherwise.
     """
-    if (a % 2 == 0) and (b % 2 == 0):
+    if (number1 % 2 == 0) and (number2 % 2 == 0):
         return False
     k = 3
-    if a > b:
-        while a > k:
-            if (a % k == 0) and (b % k == 0):
+    if number1 > number2:
+        while number1 > k:
+            if (number1 % k == 0) and (number2 % k == 0):
                 return False
             k += 2
     else:
-        while b > k:
-            if (a % k == 0) and (b % k == 0):
+        while number2 > k:
+            if (number1 % k == 0) and (number2 % k == 0):
                 return False
             k += 2
     return True
 
 
-
-def nextprime(n: int) -> int:
+def next_prime(number: int) -> int:
     """
-    Args :
-        n: int - n >= 1
-    Returns :
-        int - The next prime > n.
+    Returns the next prime > `number`.
+    Args:
+        number: Natural number to get the next prime.
+    Returns:
+        The next prime > `number`.
     """
-    prime_numbers = allprevprimes(n)
-    if n % 2 == 0:
-        n += 1
+    prime_numbers = all_previous_primes(number)
+    if number % 2 == 0:
+        number += 1
     while True:
-        if notfactors_forprime(prime_numbers, n):
-            return n
-        n += 2
+        if is_not_factor_of_primes(primes=prime_numbers, number=number):
+            return number
+        number += 2
 
 
-
-def prevprime(n: int) -> int:
+def previous_prime(number: int) -> int:
     """
-    Args :
-        n: int - n >= 1
-    Returns :
-        int - The previous prime < n.
+    Returns the previous prime < `number`.
+    Args:
+        number: Natural number to get the previous prime.
+    Returns:
+        The previous prime < `number`.
     """
-    prime_numbers = allprevprimes(n-1)
-    return prime_numbers[len(prime_numbers)-1]
+    prime_numbers = all_previous_primes(number - 1)
+    return prime_numbers[len(prime_numbers) - 1]
 
 
-
-def primerange(a: int, b: int) -> list:
+def prime_range(number1: int, number2: int) -> list[int]:
     """
-    Args :
-        a: int - a >= 1
-        b: int - b >= 1
-    Returns :
-        list - A list of prime numbers in the range [a, b[.
+    Returns a list of prime numbers in the range [number1, number2[.
+    Args:
+        number1: Natural number to get the previous prime.
+        number2: Natural number to get the next prime.
+    Returns:
+        List of prime numbers.
     """
-    prime_numbers = allprevprimes(a)
+    prime_numbers = all_previous_primes(number1)
     final_list = []
-    if a <= 2:
-        a = 2
-        if b > 2:
+    if number1 <= 2:
+        number1 = 2
+        if number2 > 2:
             final_list.append(2)
-    elif isprime(a):
-        final_list.append(a)
-    while a < b:
-        if notfactors_forprime(prime_numbers, a):
-            prime_numbers.append(a)
-            final_list.append(a)
-        a += 1
+    elif is_prime(number1):
+        final_list.append(number1)
+    while number1 < number2:
+        if is_not_factor_of_primes(primes=prime_numbers, number=number1):
+            prime_numbers.append(number1)
+            final_list.append(number1)
+        number1 += 1
     return final_list
 
 
-
-def primepi(n: int) -> int:
+def prime_pi(number: int) -> int:
     """
-    Args :
-        n: int - n >= 1
-    Returns :
-        int - The number of prime numbers <= n.
+    Returns the number of prime numbers <= `number`.
+    Args:
+        number: Natural number to get the number of prime numbers <= `number`.
+    Returns:
+        The number of prime numbers <= `number`.
     """
-    num = len(allprevprimes(n))
+    num = len(all_previous_primes(number))
     return num
 
 
-
-def sheldonprime(n: int) -> bool:
-    # Checkout the definition of sheldon prime for more info.
+def is_sheldon_prime(number: int) -> bool:
     """
-    Args :
-        n: int - n >= 1
-    Returns :
-        bool - True if n is a sheldon prime, False otherwise.
+    A sheldon prime is a prime number that satisfies the following conditions:
+    - It is a prime number.
+    - The product of its digits is a prime number.
+    - The product of the digits of its inverse is a prime number.
+    See https://en.wikipedia.org/wiki/73_(number)#Sheldon_prime.
+    Args:
+        number: Natural number to check.
+    Returns:
+        True if `number` is a sheldon prime, False otherwise.
     """
-    inverse_number = int(str(n)[::-1])
-    sum_num = int(factorsproduct(list(str(n))))
-    inverse_sum = int(str(sum_num)[::-1])
-    if not isprime(n) or not isprime(inverse_number):
+    inverse_number = int(str(number)[::-1])
+    number_digits = [int(digit) for digit in str(number)]
+    inverse_number_digits = number_digits[::-1]
+    product_of_digits = product_of_elements(number_digits)
+    inverse_product_of_digits = product_of_elements(inverse_number_digits)
+    if not is_prime(number) or not is_prime(inverse_number):
         return False
-    if n > inverse_number:
-        prime_numbers = allprevprimes(n)
-    else:
-        prime_numbers = allprevprimes(inverse_number)
-    primepi_n = prime_numbers.index(n) + 1
-    primepi_inv = prime_numbers.index(inverse_number) + 1
-    if primepi_n != sum_num or inverse_sum != primepi_inv:
+    prime_numbers = (
+        all_previous_primes(number)
+        if number > inverse_number
+        else all_previous_primes(inverse_number)
+    )
+    prime_pi_n = prime_numbers.index(number) + 1
+    prime_pi_inv = prime_numbers.index(inverse_number) + 1
+    if prime_pi_n != product_of_digits or inverse_product_of_digits != prime_pi_inv:
         return False
     return True
 
 
-
-def prime(nth: int) -> int:
+def nth_prime(nth: int) -> int:
     """
-    Args :
-        nth: int - nth >= 1
-    Returns :
-        int - The nth prime number.
-        In case nth < 1, returns None.
+    Returns the nth prime number.
+    Args:
+        nth: Natural number to get the nth prime.
+    Returns:
+        The nth prime number.
+    Raises:
+        ValueError: If `nth` < 1.
     """
     prime_numbers = [2]
     i = 3
     num = 1
     if nth < 1:
-        return None
+        raise ValueError("nth must be greater than 0")
     elif nth == 1:
         return 2
     while nth > num:
-        if notfactors_forprime(prime_numbers, i):
+        if is_not_factor_of_primes(primes=prime_numbers, number=i):
             prime_numbers.append(i)
             num += 1
         i += 2
-    return i-2
+    return i - 2

@@ -1,49 +1,62 @@
-
-
-def notfactors(list1: list, n: int) -> bool:
+def is_not_factor_of(
+    *,
+    number: int,
+    factors: list[int],
+) -> bool:
     """
-    Args :
-        list1: list - list of int
-        n: int - n >= 1
-    Returns :
-        bool - True if no number in list1 is factor of n. In other case returns False.
+    Checks if no number in `factors` is a factor of `number`.
+    Args:
+        number: Natural number to check.
+        factors: List of natural numbers to check.
+    Returns:
+        True if no number in `factors` is a factor of `number`, False otherwise.
     """
-    list1 = sorted(list1)
-    for i in list1:
-        if n % i == 0 and n > i:
+    sorted_factors = sorted(factors)
+    for factor in sorted_factors:
+        if number % factor == 0 and number > factor:
             return False
-        if n <= i:
+        if number <= factor:
             return True
     return True
 
 
-
-def notfactors_forprime(list1: list, n: int) -> bool:
-    # Variation of notfactors function for more efficiency
-    # Useful to determine if n is prime if the numbers of list1 are primes and < n.
+def is_not_factor_of_primes(
+    *,
+    primes: list[int],
+    number: int,
+    sort_primes: bool = False,
+) -> bool:
     """
-    Args :
-        list1: list - list of int
-        n: int - n >= 1
+    Variation of `is_not_factor_of` function for more efficiency.
+    Useful to determine if `number` is prime if the numbers of `primes` are primes and < `number`.
+    Args:
+        primes: List of prime numbers to check.
+        number: Natural number to check.
+        sort_primes: Whether to sort the list of primes. Default is False.
     Returns :
-        bool - True if no number in list1 is factor of n. In other case returns False.
+        True if no prime number in `primes` is a factor of `number`, False otherwise.
     """
-    # list = sorted(list)       # necessary only when list is not sorted
-    for i in list1[:int((len(list1)+1)**(1/2))+1]:
-        if n % i == 0:
+    if sort_primes:
+        primes = sorted(primes)
+    # Only check primes up to sqrt(number) because if number is divisible by a prime greater than sqrt(number),
+    # then it is divisible by a prime less than sqrt(number).
+    square_root_of_number = int((number + 1) ** (1 / 2))
+    for prime in primes[: square_root_of_number + 1]:
+        if number % prime == 0:
             return False
     return True
 
 
-
-def factorsproduct(list1: list) -> float:
-    # Returns the product of all elements of a list in a recursive way
+def product_of_elements(elements: list[int]) -> int:
     """
-    Args :
-        list1: list - list of int
-    Returns :
-        float - product of all elements of list1
+    Returns the product of all elements of `elements` in a recursive way.
+    Args:
+        elements: List of natural numbers to multiply.
+    Returns:
+        Product of all elements of `elements`
     """
-    if len(list1) == 1:
-        return float(list1[0])
-    return float(list1[len(list1)-1])*factorsproduct(list1[:len(list1)-1])
+    if len(elements) == 1:
+        return elements[0]
+    last_element = elements[-1]
+    other_elements = elements[:-1]
+    return last_element * product_of_elements(other_elements)
